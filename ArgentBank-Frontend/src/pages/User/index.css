@@ -1,3 +1,4 @@
+/* Main */
 .main {
     flex: 1;
 }
@@ -8,4 +9,88 @@
 .header {
     color: #fff;
     margin-bottom: 2rem;
+}
+
+/* Display section */
+.hide {
+    display: none;
+}
+
+.visible {
+    display: flex;
+}
+
+/* Edit Username */
+.editUsername{
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+}
+
+.formEditName {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.formEditName input{
+    height: 25px;
+    border-radius: 5px;
+    border: 1px solid lightgrey;
+}
+
+.input-wrappers {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.editButton{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.editButton button{
+    background-color: #61b37b;
+    border: none;
+    color: white;
+    width: 150px;
+    height: 45px;
+    border-radius: 3px;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.accountEdit .account{
+    background-color: #3d3d3d;
+    color: white;
+    margin-top: 30px;
+    border-radius: 5px;
+    height: 150px;
+}
+
+.accountEdit .account .transactionEdit{
+    background-color: transparent;
+    border: none;
+}
+
+.accountEdit .account .fa-solid{
+    font-size: 60px;
+    color: white;
+    cursor: pointer;
+}
+
+#firstName {
+    background: lightgray;
+    color: grey;
+}
+
+#lastName {
+    background: lightgray;
+    color: grey;
 }

@@ -4,10 +4,10 @@ import Home from './pages/Home';
 import Footer from "./components/Footer";
 import Login from "./pages/Login";
 import User from "./pages/User";
+import Error from "./pages/Error";
 
 function App() {
-  
-    return (
+  return (
       <>
       <Navbar />
         <Routes>
@@ -23,10 +23,14 @@ function App() {
             path='/user' 
             element={<User />}
           />
+          <Route 
+            path='*' 
+            element={<Error />} 
+          />
         </Routes>
       <Footer/>
     </>
+
   )
 }
-
 export default App

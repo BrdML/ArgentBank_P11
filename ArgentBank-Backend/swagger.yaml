@@ -1,9 +1,9 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
   title: Bank Argent API documentation
   description: Contains all available API endpoints in this codebase
-  version: '1.0.0'
-  termsOfService: 'http://swagger.io/terms/'
+  version: "1.0.1"
+  termsOfService: "http://swagger.io/terms/"
 host: localhost:3001
 basePath: /api/v1
 schemes:
@@ -21,17 +21,17 @@ paths:
           description: Login Payload
           required: true
           schema:
-            $ref: '#/definitions/Login'
+            $ref: "#/definitions/Login"
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: Login Successfully
           schema:
-            $ref: '#/definitions/LoginResponse'
-        '400':
+            $ref: "#/definitions/LoginResponse"
+        "400":
           description: Invalid Fields
-        '500':
+        "500":
           description: Internal Server Error
   /user/signup:
     post:
@@ -45,17 +45,17 @@ paths:
           description: Signup Payload
           required: true
           schema:
-            $ref: '#/definitions/User'
+            $ref: "#/definitions/User"
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: Signup Successfully
           schema:
-            $ref: '#/definitions/ApiResponse'
-        '400':
+            $ref: "#/definitions/ApiResponse"
+        "400":
           description: Invalid Fields
-        '500':
+        "500":
           description: Internal Server Error
   /user/profile:
     post:
@@ -66,15 +66,15 @@ paths:
       summary: User Profile API
       description: API for fetching a user profile
       #produces:
-       # - application/json
+      # - application/json
       responses:
-        '200':
+        "200":
           description: User profile retrieved successully
           schema:
-            $ref: '#/definitions/ApiResponse'
-        '400':
+            $ref: "#/definitions/ApiResponse"
+        "400":
           description: Invalid Fields
-        '500':
+        "500":
           description: Internal Server Error
     put:
       security:
@@ -89,17 +89,120 @@ paths:
           description: Update user profile attributes
           required: true
           schema:
-            $ref: '#/definitions/UserProfile'
+            $ref: "#/definitions/UserProfile"
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: User profile retrieved successully
           schema:
-            $ref: '#/definitions/ApiResponse'
-        '400':
+            $ref: "#/definitions/ApiResponse"
+        "400":
           description: Invalid Fields
-        '500':
+        "500":
+          description: Internal Server Error
+  /user/{accounts_id}:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Accounts Module
+      summary: Accounts API
+      description: Api to fetch accounts of user
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+          type: string
+        - in: path
+          name: accounts_id
+          description: Account ID
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: accounts retrieved successully
+          schema:
+            $ref: "#/definitions/AccountsResponse"
+        "400":
+          description: Invalid Fields
+        "500":
+          description: Internal Server Error
+  /user/{accounts_id}/{transactions_id}:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Transactions API
+      description: API to get a detail of a single transaction
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+          type: string
+        - in: path
+          name: transactions_id
+          description: Transactions ID
+          required: true
+          type: integer
+          format: int64
+        - in: path
+          name: accounts_id
+          description: Account ID
+          required: true
+          type: integer
+          format: int64
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: A single transaction retrieved successully
+          schema:
+            $ref: "#/definitions/TransactionsResponse"
+        "400":
+          description: Invalid Field
+        "500":
+          description: Internal Server Error
+    put:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Transactions API
+      description: API for updating a transaction
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+          type: string
+        - in: path
+          description: Transactions ID
+          name: transactions_id
+          required: true
+          type: integer
+          format: int64
+        - in: path
+          description: Accounts ID
+          name: accounts_id
+          required: true
+          type: integer
+          format: int64
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: updated transaction successully
+          schema:
+            $ref: "#/definitions/TransactionsResponse"
+        "400":
+          description: Invalid Fields
+        "500":
           description: Internal Server Error
 securityDefinitions:
   Bearer:
@@ -156,3 +259,48 @@ definitions:
     properties:
       userName:
         type: string
+  AccountsResponse:
+    type: object
+    items:
+      type: object
+    properties:
+      id:
+        type: integer
+        description: account id
+      title:
+        type: string
+        description: account title
+      amount:
+        type: integer
+        description: account amount
+      description:
+        type: string
+        description: account description
+  TransactionsResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        description: The unique identifier of the transaction.
+      date:
+        type: string
+        format: date-time
+        description: transaction date
+      description:
+        type: string
+        description: transaction description.
+      amount:
+        type: number
+        description: transaction amount.
+      balance:
+        type: number
+        description: transaction balance.
+      type:
+        type: string
+        description: transaction type.
+      category:
+        type: string
+        description: transaction category.
+      note:
+        type: string
+        description: transaction note.
