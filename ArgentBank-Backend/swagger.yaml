@@ -101,7 +101,7 @@ paths:
           description: Invalid Fields
         "500":
           description: Internal Server Error
-  /user/{accounts_id}:
+  /user/accounts/{accounts_id}:
     get:
       security:
         - Bearer: []
@@ -119,7 +119,7 @@ paths:
           name: accounts_id
           description: Account ID
           required: true
-          type: string
+          type: integer
       produces:
         - application/json
       responses:
@@ -131,7 +131,7 @@ paths:
           description: Invalid Fields
         "500":
           description: Internal Server Error
-  /user/{accounts_id}/{transactions_id}:
+  /user/accounts/{accounts_id}/transactions/{transactions_id}:
     get:
       security:
         - Bearer: []
@@ -150,13 +150,11 @@ paths:
           description: Transactions ID
           required: true
           type: integer
-          format: int64
         - in: path
           name: accounts_id
           description: Account ID
           required: true
           type: integer
-          format: int64
       produces:
         - application/json
       responses:
@@ -186,13 +184,11 @@ paths:
           name: transactions_id
           required: true
           type: integer
-          format: int64
         - in: path
           description: Accounts ID
           name: accounts_id
           required: true
           type: integer
-          format: int64
       produces:
         - application/json
       responses:
