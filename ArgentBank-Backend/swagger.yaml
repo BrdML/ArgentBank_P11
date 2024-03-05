@@ -101,14 +101,54 @@ paths:
           description: Invalid Fields
         "500":
           description: Internal Server Error
-  /user/accounts/{accounts_id}:
+  /user/accounts:
     get:
       security:
         - Bearer: []
       tags:
         - Accounts Module
       summary: Accounts API
-      description: Api to fetch accounts of user
+      description: Api to get all user accounts
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: all accounts retrieved successfully
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/AccountsResponse"
+            example:
+            - id: 0
+              title: "Argent Bank Checking (x8349)" 
+              amount: 2082.79
+              description: "Available Balance"
+            - id: 1
+              title: "Argent Bank Savings (x6712)"
+              amount: 5333.26
+              description: "Available Balance"
+            - id: 2
+              title: "Argent Bank Credit Card (x8349)" 
+              amount: 6570.79
+              description: "Current Balance"              
+        "400":
+          description: Accounts not found
+        "500":
+          description: Internal Server Error
+  /user/accounts/{account_id}/transaction:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Transaction API
+      description: API to get all transactions
       parameters:
         - in: header
           name: Authorization
@@ -116,22 +156,40 @@ paths:
           required: true
           type: string
         - in: path
-          name: accounts_id
-          description: Account ID
+          name: account_id
+          description: account id
           required: true
-          type: integer
+          type: string
       produces:
         - application/json
       responses:
         "200":
-          description: accounts retrieved successully
+          description: All transactions retrieved successfully
           schema:
-            $ref: "#/definitions/AccountsResponse"
+            type: array
+            items:
+              $ref: "#/definitions/Transactions"
+            example:
+            - id: 0
+              date: "2024-03-05T07:47:40.423Z"
+              description: "Payment at Starbucks"
+              amount: 50
+              balance: 2032.79
+            - id: 1
+              date: "2024-03-05T07:47:40.423Z"
+              description: "Payment at Starbucks"
+              amount: 25
+              balance: 2082.79
+            - id: 2
+              date: "2024-03-04T11:05:42.000Z"
+              description: "Movie ticket purchase"
+              amount: 15.00
+              balance: 2210.29
         "400":
-          description: Invalid Fields
+          description: Invalid Field
         "500":
           description: Internal Server Error
-  /user/accounts/{accounts_id}/transactions/{transactions_id}:
+  /user/account/{account_id}/transaction/{transaction_id}:
     get:
       security:
         - Bearer: []
@@ -146,12 +204,12 @@ paths:
           required: true
           type: string
         - in: path
-          name: transactions_id
-          description: Transactions ID
+          name: transaction_id
+          description: Transaction ID
           required: true
           type: integer
         - in: path
-          name: accounts_id
+          name: account_id
           description: Account ID
           required: true
           type: integer
@@ -161,18 +219,19 @@ paths:
         "200":
           description: A single transaction retrieved successully
           schema:
-            $ref: "#/definitions/TransactionsResponse"
+            $ref: "#/definitions/TransactionResponse"
         "400":
           description: Invalid Field
         "500":
           description: Internal Server Error
+  /user/accounts/{account_id}/transactions/{transaction_id}:
     put:
       security:
         - Bearer: []
       tags:
         - Transactions Module
       summary: Transactions API
-      description: API for updating a transaction
+      description: API for updating a category of transaction
       parameters:
         - in: header
           name: Authorization
@@ -180,15 +239,21 @@ paths:
           required: true
           type: string
         - in: path
-          description: Transactions ID
-          name: transactions_id
+          description: transaction ID
+          name: transaction_id
           required: true
           type: integer
         - in: path
-          description: Accounts ID
-          name: accounts_id
+          description: account ID
+          name: account_id
           required: true
           type: integer
+        - in: body
+          name: body
+          description: Update account transaction attributes
+          required: true
+          schema:
+            $ref: "#/definitions/TransactionsEdit"
       produces:
         - application/json
       responses:
@@ -199,7 +264,7 @@ paths:
         "400":
           description: Invalid Fields
         "500":
-          description: Internal Server Error
+          description: Internal Server Error          
 securityDefinitions:
   Bearer:
     type: apiKey
@@ -231,6 +296,16 @@ definitions:
       password:
         type: string
         description: user password
+  TransactionsEdit:
+    properties:
+      category:
+        type: string
+        description: transaction category.
+        example : Grocery shopping
+      note:
+        type: string
+        description: transaction note.
+        example : Lorem ipsum
   ApiResponse:
     type: object
     properties:
@@ -255,6 +330,25 @@ definitions:
     properties:
       userName:
         type: string
+  Transactions:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: transaction id.
+          date:
+            type: string
+            format: date-time
+            description: transaction date.
+          description:
+            type: string
+            description: transaction description.
+          amount:
+            type: number
+            description: transaction amount.
+          balance:
+            type: number
+            description: transaction balance.
   AccountsResponse:
     type: object
     items:
@@ -267,7 +361,7 @@ definitions:
         type: string
         description: account title
       amount:
-        type: integer
+        type: number
         description: account amount
       description:
         type: string
@@ -276,7 +370,7 @@ definitions:
     type: object
     properties:
       id:
-        type: string
+        type: integer
         description: The unique identifier of the transaction.
       date:
         type: string
@@ -285,18 +379,58 @@ definitions:
       description:
         type: string
         description: transaction description.
+        example: Payment at Starbucks
       amount:
         type: number
         description: transaction amount.
+        example: 50.00
       balance:
         type: number
         description: transaction balance.
-      type:
+        example: 2032.79
+      transactionType:
         type: string
         description: transaction type.
+        example: Electronic
       category:
         type: string
         description: transaction category.
+        example: Grocery shopping
       note:
         type: string
         description: transaction note.
+        example: Lorem ipsum
+  TransactionResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: The unique identifier of the transaction.
+      date:
+        type: string
+        format: date-time
+        description: transaction date
+      description:
+        type: string
+        description: transaction description.
+        example: Payment at Starbucks
+      amount:
+        type: number
+        description: transaction amount.
+        example: 50.00
+      balance:
+        type: number
+        description: transaction balance.
+        example: 2032.79
+      transactionType:
+        type: string
+        description: transaction type.
+        example: Electronic
+      category:
+        type: string
+        description: transaction category.
+        example: Food
+      note:
+        type: string
+        description: transaction note.
+        example: Lorem ipsum
