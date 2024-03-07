@@ -1,9 +1,9 @@
 import React from 'react';
 import Banner from "../../components/Banner";
 import Features from '../../components/Features';
-import ChatLogo from "../../assets/images/icon-chat.png";
-import MoneyLogo from "../../assets/images/icon-money.png";
-import SecurityLogo from "../../assets/images/icon-security.png";
+import ChatLogo from "../../assets/images/icon-chat.webp";
+import MoneyLogo from "../../assets/images/icon-money.webp";
+import SecurityLogo from "../../assets/images/icon-security.webp";
 import './index.css'
 
 function Home() {
